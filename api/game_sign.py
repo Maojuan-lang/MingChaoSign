@@ -26,6 +26,7 @@ class BaseGameSign:
 
     url_reward = "https://api.kurobbs.com/encourage/signIn/initSignInV2"
     url_sign = "https://api.kurobbs.com/encourage/signIn/v2"
+    url_bbs_sign = "https://api.kurobbs.com/user/signIn"
 
     game_id = "0"
     server_id = "0"
@@ -67,7 +68,6 @@ class BaseGameSign:
         }
         response = requests.post(self.url_reward, data=data, headers=self.headers)
         data = response.json()
-        print(data)
         return GetRewardsResultHandler.model_validate(data)
 
     def sign(self):
@@ -89,7 +89,18 @@ class BaseGameSign:
         data = response.json()
         print(data)
         return SignResultHandler.model_validate(data)
+    
+    def bbs_sign(self):
+        """
+        签到
+        """
+        data = {
+            "gameId": "3"
+        }
 
+        response = requests.post(self.url_bbs_sign, data=data, headers=self.headers)
+
+        return response
 
 class WutheringWaves(BaseGameSign):
     name = "鸣潮"

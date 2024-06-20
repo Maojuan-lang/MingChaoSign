@@ -15,13 +15,14 @@ if __name__ == '__main__':
             "id": id
         }
         game_sign.WutheringWaves.role_id = role_id
-        print("开始执行签到")
+        message += "开始执行签到"
         if user_data:
             for class_type in game_sign.AVAILABLE_GAME_SIGNS:
                 message += f"开始签到{class_type.name}\n\n"
                 signer = class_type(token=user_data["token"], user_id=user_data["id"])
                 rewards = signer.get_rewards()
                 sign_result = signer.sign()
+                bbs_sign_result = signer.bbs_sign()
                 if sign_result:
                     for today in sign_result.data.todayList:
                         name = rewards.goods_config[today.goodsId].goodsName
@@ -34,6 +35,10 @@ if __name__ == '__main__':
                 else:
                     print(sign_result.msg)
                     message += f"签到失败，{sign_result.msg}\n"
+                if bbs_sign_result.json()["code"] == 200:
+                    message += "社区签到成功\n"
+                else:
+                    message += bbs_sign_result.text + "\n"
             print(message[:-1])
         else:
             print("签到 - 无用户信息")
